@@ -51,7 +51,7 @@ export default function Shader({ position, uSize = 0.005 }) {
       step: 0.01,
     },
     saturation: { value: 1.05, min: 1, max: 1.25, step: 0.01 },
-    pointerSize: { value: 0.1, min: 0.01, max: 1.0, step: 0.1 },
+    pointerSize: { value: 0.001, min: 0.01, max: 1.0, step: 0.1 },
   })
 
   // Destructure controls for use in useFrame

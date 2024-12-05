@@ -11,7 +11,6 @@ import {
 import { Leva } from "leva"
 
 import Images from "./Images.jsx"
-import Lens from "./Lens.jsx"
 import Typography from "./Typo.jsx"
 import Shader from "./Shader.jsx"
 import Model from "./model.jsx"
@@ -46,6 +45,7 @@ export default function App() {
       }}
     >
       <ResizeHandler />
+
       <Environment files="./hdri/aerodynamics_workshop_2k.hdr" />
       <ScrollControls damping={0.2} pages={3} distance={0.5}>
         <Scroll>

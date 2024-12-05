@@ -59,14 +59,23 @@ float opSmoothUnion( float d1, float d2, float k ) {
     return mix( d2, d1, h ) - k*h*(1.0-h);
 }
 
+float opSmoothSubtraction(float d1, float d2, float k) {
+    float h = clamp(0.5 - 0.5 * (d2 + d1) / k, 0.0, 1.0);
+    return mix(d2, -d1, h) + k * h * (1.0 - h);
+}
+
 #define BALL_NUM 5
+
+float cylinder(vec3 p, float radius, float height) {
+    vec2 d = abs(vec2(length(p.yx), p.z)) - vec2(radius, height);
+    return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));
+}
 
 float GetDist(vec3 p) {
 	float d = 1e5;
 
 	vec3 mousePos = vec3(uMouse.x * (uResolution.x/uResolution.y) * 0.5, uMouse.y * 0.5, 0.0);
-    d = sphere(p - mousePos, uPointerSize);
-
+    float dMouse = cylinder(p - mousePos, uPointerSize * 1., 1.0);
 
 	for(int i = 0; i < BALL_NUM; i++) {
 		float fi = float(i) + 0.01;
@@ -75,6 +84,8 @@ float GetDist(vec3 p) {
 		vec3 offset = .5 * sin(hash3(fi)) * cos(uTime + float(i));
 		d = opSmoothUnion(d, sphere(p - offset, r), 0.3);
 	}
+	d = opSmoothSubtraction(dMouse, d, 0.18);
+	// d = opSmoothUnion(d, dMouse, 0.4);
 	return d;
 }
 
