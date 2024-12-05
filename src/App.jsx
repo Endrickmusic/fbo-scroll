@@ -9,6 +9,7 @@ import {
   Environment,
 } from "@react-three/drei"
 import { Leva } from "leva"
+import { Perf } from "r3f-perf"
 
 import Images from "./Images.jsx"
 import Typography from "./Typo.jsx"
@@ -36,6 +37,7 @@ function ResizeHandler() {
 export default function App() {
   return (
     <Canvas
+      frameloop="demand"
       camera={{
         position: [0, 0, 20],
         fov: 15,
@@ -45,6 +47,7 @@ export default function App() {
       }}
     >
       <Leva hidden={true} />
+      <Perf position="top-left" />
       <ResizeHandler />
       <Environment files="./hdri/aerodynamics_workshop_2k.hdr" />
       <ScrollControls damping={0.1} pages={3} distance={0.5}>

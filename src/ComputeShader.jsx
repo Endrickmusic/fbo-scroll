@@ -11,7 +11,7 @@ import { heightmapFragmentShader } from "./shader/gpgpu/heightmapFragmentShader.
 import ModifiedShader from "./ModifiedShader.jsx"
 
 // Texture width for simulation
-const WIDTH = 256
+const WIDTH = 128
 
 // Water size in system units
 const BOUNDS = 512
@@ -23,6 +23,7 @@ export default function initWater({
   rotation = [0, 0, 0],
   position = [0, 0, 0],
   diffuseMap,
+  roughness = 0.0,
 }) {
   const { gl, camera } = useThree()
   const [heightmapTexture, setHeightmapTexture] = useState()
@@ -51,7 +52,6 @@ export default function initWater({
     Viscosity: { value: 0.99, min: 0.95, max: 0.999, step: 0.001 },
     MouseSize: { value: 41, min: 1.0, max: 100, step: 1.0 },
     Metalness: { value: 0.14, min: 0.0, max: 1.0, step: 0.001 },
-    Roughness: { value: 0.0, min: 0.0, max: 1.0, step: 0.001 },
     NormalMapScale: { value: 0.16, min: 0.0, max: 5.0, step: 0.01 },
     Wireframe: false,
     NoiseStrength: { value: 5.0, min: 0.0, max: 10.0, step: 0.01 },
@@ -223,7 +223,7 @@ export default function initWater({
           ref={materialRef}
           side={DoubleSide}
           wireframe={options.Wireframe}
-          roughness={options.Roughness}
+          roughness={roughness}
           // roughnessMap={roughnessMap}
           map={diffuseMap}
           metalness={options.Metalness}

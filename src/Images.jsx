@@ -9,8 +9,23 @@ export default function Images() {
   const data = useScroll()
   const { width, height } = useThree((state) => state.viewport)
 
-  const diffuseMap_potrait = useTexture("./textures/Portrait_02.jpg")
-  const diffuseMap_ocean = useTexture("./img/ocean_iridescent_05.png")
+  const [
+    diffuseMap_potrait,
+    diffuseMap_ocean,
+    diffuseMap_crystal,
+    diffuseMap_dispersion,
+    diffuseMap_more_money,
+    diffuseMap_nohdri,
+    diffuseMap_colorcube,
+  ] = useTexture([
+    "./textures/Portrait_02.jpg",
+    "./img/ocean_iridescent_05.png",
+    "./img/crystal_9.png",
+    "./img/dispersion_octane_08.png",
+    "./img/more_money_02.png",
+    "./img/nohdri0114.png",
+    "./img/Colorcube_octane_15.png",
+  ])
 
   useFrame(() => {
     group.current.children[0].material.zoom = 1 + data.range(0, 1 / 3) / 3
@@ -28,12 +43,19 @@ export default function Images() {
   })
   return (
     <group ref={group}>
-      <Image
+      <ComputeShader
         position={[-2, 0, 0]}
-        scale={[4, height, 1]}
-        url="./img/Colorcube_octane_15.png"
+        scale={0.0065}
+        rotation={[0, 0.15 * Math.PI, -0.05 * Math.PI]}
+        diffuseMap={diffuseMap_colorcube}
+        roughness={0.3}
       />
-      <Image position={[2, 0, 3]} scale={3} url="./img/crystal_9.png" />
+      <ComputeShader
+        position={[2, 0, 1]}
+        scale={0.0055}
+        rotation={[0, -0.05 * Math.PI, 0.05 * Math.PI]}
+        diffuseMap={diffuseMap_crystal}
+      />
       <Image
         position={[-2.05, -height, 6]}
         scale={[1, 3, 1]}
