@@ -11,7 +11,6 @@ import {
 import { Leva } from "leva"
 
 import Images from "./Images.jsx"
-import Lens from "./Lens.jsx"
 import Typography from "./Typo.jsx"
 import Shader from "./Shader.jsx"
 import Model from "./model.jsx"
@@ -45,15 +44,16 @@ export default function App() {
         aspect: window.innerWidth / window.innerHeight,
       }}
     >
+      <Leva hidden={true} />
       <ResizeHandler />
       <Environment files="./hdri/aerodynamics_workshop_2k.hdr" />
-      <ScrollControls damping={0.2} pages={3} distance={0.5}>
+      <ScrollControls damping={0.1} pages={3} distance={0.5}>
         <Scroll>
           <Typography />
           <Images />
           <Shader position={[0, 0, 3]} uSize={0.6} />
           <Shader position={[0, -1, 7]} uSize={0.005} />
-          <Model scale={0.028} position={[0, -1.2, 5]} />
+          <Model scale={0.1} position={[-1, -12, 3]} rotation={[0, 1.1, 0]} />
         </Scroll>
         <Scroll html>
           <div style={{ transform: "translate3d(65vw, 30vh, 0)" }}>

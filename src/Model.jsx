@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react"
 import { useGLTF, useAnimations, useScroll } from "@react-three/drei"
 import { useFrame } from "@react-three/fiber"
+import { MathUtils } from "three"
 
 export default function Model(props) {
   const group = useRef()
@@ -11,7 +12,7 @@ export default function Model(props) {
   const scrolling = useScroll()
 
   useEffect(() => {
-    // Pause all animations
+    // Pause all animations initially
     Object.values(actions).forEach((action) => {
       if (action) {
         action.play().paused = true
@@ -19,14 +20,55 @@ export default function Model(props) {
     })
   }, [actions])
 
-  // Use useFrame to update animation based on scroll
   useFrame(() => {
     const scroll = scrolling.offset
-    const maxScroll = 0.99
+    const startScroll = 0.8
+    const endScroll = 1.0
+
+    // Define stops with specific animation progress values
+    const stops = [
+      { scrollAt: 0.85, animationAt: 0.3 }, // At 70% scroll, stop at 30% of animation
+      { scrollAt: 0.9, animationAt: 0.6 }, // At 80% scroll, stop at 60% of animation
+      { scrollAt: 0.99, animationAt: 0.99 }, // At 90% scroll, stop at 80% of animation
+    ]
+
+    // Normalize scroll value
+    let normalizedScroll = Math.max(
+      0,
+      Math.min(0.99, (scroll - startScroll) / (endScroll - startScroll))
+    )
+
+    // Find the appropriate animation progress based on stops
+    let animationProgress = normalizedScroll
+    for (let i = 0; i < stops.length; i++) {
+      const currentStop = stops[i]
+      const nextStop = stops[i + 1]
+
+      if (normalizedScroll <= currentStop.scrollAt) {
+        // Before this stop
+        const prevStop = stops[i - 1] || { scrollAt: 0, animationAt: 0 }
+        const scrollRange = currentStop.scrollAt - prevStop.scrollAt
+        const animationRange = currentStop.animationAt - prevStop.animationAt
+        const localProgress =
+          (normalizedScroll - prevStop.scrollAt) / scrollRange
+        animationProgress =
+          prevStop.animationAt + localProgress * animationRange
+        break
+      } else if (!nextStop) {
+        // After last stop
+        const remainingScrollRange = 1 - currentStop.scrollAt
+        const remainingAnimationRange = 0.99 - currentStop.animationAt
+        const localProgress =
+          (normalizedScroll - currentStop.scrollAt) / remainingScrollRange
+        animationProgress =
+          currentStop.animationAt + localProgress * remainingAnimationRange
+      }
+    }
+
     Object.values(actions).forEach((action) => {
       if (action) {
         const duration = action.getClip().duration
-        action.time = duration * Math.min(scroll, maxScroll)
+        action.time = duration * animationProgress
         action.paused = false
       }
     })

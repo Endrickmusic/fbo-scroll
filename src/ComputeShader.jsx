@@ -22,6 +22,7 @@ export default function initWater({
   scale = 1,
   rotation = [0, 0, 0],
   position = [0, 0, 0],
+  diffuseMap,
 }) {
   const { gl, camera } = useThree()
   const [heightmapTexture, setHeightmapTexture] = useState()
@@ -41,10 +42,9 @@ export default function initWater({
   })
   // const envMap = useEnvironment({ files: "./hdri/envmap.hdr" })
 
-  const [normalMap, roughnessMap, diffuseMap] = useTexture([
+  const [normalMap, roughnessMap] = useTexture([
     "./textures/waternormals.jpeg",
     "./textures/SurfaceImperfections003_1K_var1.jpg",
-    "./textures/Portrait_02.jpg",
   ])
 
   const options = useControls("Controls", {

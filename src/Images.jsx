@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import { useFrame, useThree } from "@react-three/fiber"
-import { Image, useScroll } from "@react-three/drei"
+import { Image, useScroll, useTexture } from "@react-three/drei"
 
 import ComputeShader from "./ComputeShader.jsx"
 
@@ -8,6 +8,10 @@ export default function Images() {
   const group = useRef()
   const data = useScroll()
   const { width, height } = useThree((state) => state.viewport)
+
+  const diffuseMap_potrait = useTexture("./textures/Portrait_02.jpg")
+  const diffuseMap_ocean = useTexture("./img/ocean_iridescent_05.png")
+
   useFrame(() => {
     group.current.children[0].material.zoom = 1 + data.range(0, 1 / 3) / 3
     group.current.children[1].material.zoom = 1 + data.range(0, 1 / 3) / 3
@@ -44,6 +48,7 @@ export default function Images() {
         position={[1.9, -height, 2]}
         scale={0.0055}
         rotation={[1.9 * Math.PI, -0.15 * Math.PI, 0]}
+        diffuseMap={diffuseMap_potrait}
       />
       <Image
         position={[0, -height * 1.5, 7.5]}
